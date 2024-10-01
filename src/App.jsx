@@ -1,73 +1,90 @@
 import { useState, useEffect } from 'react';
 import reactLogo from './assets/react.svg';
 import viteLogo from '/vite.svg';
-import questionsData from './questions.json'; // Import the JSON file
+import questionsData from './questions.json'; // Importar o arquivo JSON
+import { db } from './firebase';
 import './App.css';
+import {collection, addDoc, Timestamp} from 'firebase/firestore'
 
 function App() {
-  const [count, setCount] = useState(0);
-  const [numPergunta, setnumPergunta] = useState(1);
-  const [showQuiz, setShowQuiz] = useState(false);
-  const [questions, setQuestions] = useState([]);
-  const [selectedAnswer, setSelectedAnswer] = useState(null);
-  const [isCorrect, setIsCorrect] = useState(null);
-  const [explanation, setExplanation] = useState('');
+  const [contagem, setContagem] = useState(0);
+  const [numPergunta, setNumPergunta] = useState(1);
+  const [mostrarQuiz, setMostrarQuiz] = useState(false);
+  const [perguntas, setPerguntas] = useState([]);
+  const [respostaSelecionada, setRespostaSelecionada] = useState(null);
+  const [estaCorreto, setEstaCorreto] = useState(null);
+  const [explicacao, setExplicacao] = useState('');
+  const [nomeUsuario, setNomeUsuario] = useState(""); // Novo estado para o nome do usuário
 
-  const handleStartQuiz = () => {
-    setShowQuiz(true);
+  const iniciarQuiz = () => {
+    setMostrarQuiz(true);
   };
 
-  const handleBackToStart = () => {
-    setShowQuiz(false);
-    setCount(0); // Opcional: redefinir a pontuação ao voltar ao início
-    setnumPergunta(1); // Opcional: redefinir o número da pergunta ao voltar ao início
-    setSelectedAnswer(null);
-    setIsCorrect(null);
-    setExplanation('');
+  const voltarAoInicio = () => {
+    setMostrarQuiz(false);
+    setContagem(0); // Opcional: redefinir a pontuação ao voltar ao início
+    setNumPergunta(1); // Opcional: redefinir o número da pergunta ao voltar ao início
+    setRespostaSelecionada(null);
+    setEstaCorreto(null);
+    setExplicacao('');
+    setNomeUsuario(""); // Redefinir o nome do usuário ao voltar ao início
   };
 
-  const handleAnswerSelection = (selectedOption) => {
-    const currentQuestion = questions[numPergunta - 1];
-    const correct = selectedOption === currentQuestion.correct_option;
-    setSelectedAnswer(selectedOption);
-    setIsCorrect(correct);
-    setExplanation(currentQuestion.explanation);
+  const selecionarResposta = (opcaoSelecionada) => {
+    const perguntaAtual = perguntas[numPergunta - 1];
+    const correto = opcaoSelecionada === perguntaAtual.correct_option;
+    setRespostaSelecionada(opcaoSelecionada);
+    setEstaCorreto(correto);
+    setExplicacao(perguntaAtual.explanation);
 
-    if (correct) {
-      setCount(count + 1);
+    if (correto) {
+      setContagem(contagem + 1);
     }
 
     setTimeout(() => {
-      if (numPergunta < questions.length) {
-        setnumPergunta(numPergunta + 1);
+      if (numPergunta < perguntas.length) {
+        setNumPergunta(numPergunta + 1);
       } else {
-        alert(`Quiz finished! Your score is ${count + (correct ? 1 : 0)}`);
-        handleBackToStart();
+        let nome = prompt(`Quiz finalizado! Sua pontuação é ${contagem + (correto ? 1 : 0)}. Por favor, insira seu nome:`);
+        setNomeUsuario(nome.substring(0, 12)); // Armazenar o nome do usuário e limitar a 12 caracteres
+    
+        // Enviar pontuação e nome para o Firestore
+        addDoc(collection(db, 'usuarios'), {
+          nome: nome.substring(0, 12), // Use a variável `nome` diretamente
+          acertos: contagem + 1
+        }).then(() => {
+          console.log("Dados salvos com sucesso.");
+        }).catch((error) => {
+          console.error("Erro ao salvar dados: ", error);
+        });
+    
+        voltarAoInicio();
       }
-      setSelectedAnswer(null);
-      setIsCorrect(null);
-      setExplanation('');
-    }, 5000); // Delay increased to 5 seconds to allow reading the explanation
+      setRespostaSelecionada(null);
+      setEstaCorreto(null);
+      setExplicacao('');
+    }, 5); // Atraso aumentado para 5 segundos para permitir a leitura da explicação da resposta
   };
 
   useEffect(() => {
-    if (showQuiz) {
-      setQuestions(questionsData);
+    if (mostrarQuiz) {
+      setPerguntas(questionsData);
     }
-  }, [showQuiz]);
+  }, [mostrarQuiz]);
+
 
   return (
     <>
-      {!showQuiz ? (
+      {!mostrarQuiz ? (
         <div>
           <div className="logo-container">
             <a href="" target="_blank">
               <img src={viteLogo} className="logo" alt="Quiz" />
               <h3>Placar de Líderes</h3>
             </a>
-            <a onClick={() => setCount(0)} target="_blank">
-              <img onClick={handleStartQuiz} src={reactLogo} className="logo react" alt="Energias Renováveis" />
-              <h3 onClick={handleStartQuiz}>Iniciar</h3>
+            <a onClick={() => setContagem(0)} target="_blank">
+              <img onClick={iniciarQuiz} src={reactLogo} className="logo react" alt="Energias Renováveis" />
+              <h3 onClick={iniciarQuiz}>Iniciar</h3>
             </a>
           </div>
           <h1>Quiz Energias Renováveis</h1>
@@ -85,44 +102,43 @@ function App() {
         </div>
       ) : (
         <div className="quiz-container">
-          <a className="btn-voltar" onClick={handleBackToStart}>Voltar ao início</a>
-          <p>Pontuação: {count}</p>
+          <a className="btn-voltar" onClick={voltarAoInicio}>Voltar ao início</a>
+          <p>Pontuação: {contagem}</p>
           <h2>Pergunta {numPergunta}</h2>
-          {questions.length > 0 && (
+          {perguntas.length > 0 && (
             <>
-              <p>{questions[numPergunta - 1].question}</p>
+              <p>{perguntas[numPergunta - 1].question}</p>
               <div className="options">
                 <button
-                  className={`btnA ${selectedAnswer === 'A' ? (isCorrect ? 'correct' : 'incorrect') : ''}`}
-                  onClick={() => handleAnswerSelection('A')}
-                  disabled={selectedAnswer !== null}
+                  className={`btnA ${respostaSelecionada === 'A' ? (estaCorreto ? 'correct' : 'incorrect') : ''}`}
+                  onClick={() => selecionarResposta('A')}
+                  disabled={respostaSelecionada !== null}
                 >
-                  A) {questions[numPergunta - 1].option_a}
+                  A) {perguntas[numPergunta - 1].option_a}
                 </button>
                 <button
-                  className={`btnB ${selectedAnswer === 'B' ? (isCorrect ? 'correct' : 'incorrect') : ''}`}
-                  onClick={() => handleAnswerSelection('B')}
-                  disabled={selectedAnswer !== null}
+                  className={`btnB ${respostaSelecionada === 'B' ? (estaCorreto ? 'correct' : 'incorrect') : ''}`}
+                  onClick={() => selecionarResposta('B')}
+                  disabled={respostaSelecionada !== null}
                 >
-                  B) {questions[numPergunta - 1].option_b}
+                  B) {perguntas[numPergunta - 1].option_b}
                 </button>
                 <button
-                  className={`btnC ${selectedAnswer === 'C' ? (isCorrect ? 'correct' : 'incorrect') : ''}`}
-                  onClick={() => handleAnswerSelection('C')}
-                  disabled={selectedAnswer !== null}
+                  className={`btnC ${respostaSelecionada === 'C' ? (estaCorreto ? 'correct' : 'incorrect') : ''}`}
+                  onClick={() => selecionarResposta('C')}
+                  disabled={respostaSelecionada !== null}
                 >
-                  C) {questions[numPergunta - 1].option_c}
+                  C) {perguntas[numPergunta - 1].option_c}
                 </button>
                 <button
-                  className={`btnD ${selectedAnswer === 'D' ? (isCorrect ? 'correct' : 'incorrect') : ''}`}
-                  onClick={() => handleAnswerSelection('D')}
-                  disabled={selectedAnswer !== null}
+                  className={`btnD ${respostaSelecionada === 'D' ? (estaCorreto ? 'correct' : 'incorrect') : ''}`}
+                  onClick={() => selecionarResposta('D')}
+                  disabled={respostaSelecionada !== null}
                 >
-                  D) {questions[numPergunta - 1].option_d}
+                  D) {perguntas[numPergunta - 1].option_d}
                 </button>
               </div>
-              {selectedAnswer && <p className="explanation">{explanation}</p>}
-              
+              {respostaSelecionada && <p className="explanation">{explicacao}</p>}
             </>
           )}
         </div>
