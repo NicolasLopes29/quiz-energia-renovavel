@@ -4,7 +4,7 @@ import viteLogo from '/vite.svg';
 import questionsData from './questions.json'; // Importar o arquivo JSON
 import { db } from './firebase';
 import './App.css';
-import {collection, addDoc, Timestamp} from 'firebase/firestore'
+import {collection, addDoc, query, orderBy, getDocs} from 'firebase/firestore' // Adicione query, orderBy, getDocs
 
 function App() {
   const [contagem, setContagem] = useState(0);
@@ -15,9 +15,20 @@ function App() {
   const [estaCorreto, setEstaCorreto] = useState(null);
   const [explicacao, setExplicacao] = useState('');
   const [nomeUsuario, setNomeUsuario] = useState(""); // Novo estado para o nome do usuário
+  const [mostrarPlacar, setMostrarPlacar] = useState(false); // Novo estado para controlar a visualização do placar
+  const [lideres, setLideres] = useState([]); // Novo estado para armazenar os líderes
+
+  
 
   const iniciarQuiz = () => {
     setMostrarQuiz(true);
+  };
+
+  const buscarLideres = async () => {
+    const q = query(collection(db, 'usuarios'), orderBy('acertos', 'desc')); // Buscar os usuários ordenados por 'acertos' em ordem decrescente
+    const querySnapshot = await getDocs(q);
+    setLideres(querySnapshot.docs.map(doc => doc.data())); // Armazenar os líderes no estado
+    setMostrarPlacar(true); // Mostrar o placar
   };
 
   const voltarAoInicio = () => {
@@ -75,18 +86,19 @@ function App() {
 
   return (
     <>
-      {!mostrarQuiz ? (
+      {!mostrarQuiz && !mostrarPlacar ? (
         <div>
           <div className="logo-container">
-            <a href="" target="_blank">
-              <img src={viteLogo} className="logo" alt="Quiz" />
-              <h3>Placar de Líderes</h3>
-            </a>
+          <a onClick={buscarLideres} target="_blank">
+            <img src={viteLogo} className="logo" alt="Quiz" />
+            <h3>Placar de Líderes</h3>
+          </a>
             <a onClick={() => setContagem(0)} target="_blank">
               <img onClick={iniciarQuiz} src={reactLogo} className="logo react" alt="Energias Renováveis" />
               <h3 onClick={iniciarQuiz}>Iniciar</h3>
             </a>
           </div>
+          
           <h1>Quiz Energias Renováveis</h1>
           <div className="card">
             <a href="https://www.estrategiaods.org.br/os-ods/ods7/" target="_blank" rel="noopener noreferrer">
@@ -99,6 +111,18 @@ function App() {
           <p className="read-the-docs">
             Atividade TI - Senac
           </p>
+        </div>
+      ) : mostrarPlacar ? (
+        <div>
+          <h2>Placar de Líderes</h2>
+          {lideres.map((lider, index) => (
+  <p key={index}>
+    {index === 0 ? '👑 ' : `${index + 1}. `}
+    <strong>{index === 0 ? lider.nome : `${lider.nome}:`}</strong>
+    {` ${lider.acertos} acertos`}
+  </p>
+))}
+          <button onClick={() => setMostrarPlacar(false)}>Voltar</button>
         </div>
       ) : (
         <div className="quiz-container">
