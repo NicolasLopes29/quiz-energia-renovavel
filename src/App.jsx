@@ -74,7 +74,7 @@ function App() {
       setRespostaSelecionada(null);
       setEstaCorreto(null);
       setExplicacao('');
-    }, 5000); // Atraso aumentado para 5 segundos para permitir a leitura da explicação da resposta
+    }, 50000); // Atraso aumentado para 5 segundos para permitir a leitura da explicação da resposta
   };
 
   useEffect(() => {
