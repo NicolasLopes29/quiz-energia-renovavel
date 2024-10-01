@@ -1,0 +1,102 @@
+[
+    {
+      "id": 1,
+      "question": "Qual é a fonte de energia renovável mais utilizada no mundo?",
+      "option_a": "Energia Solar",
+      "option_b": "Energia Eólica",
+      "option_c": "Energia Hidrelétrica",
+      "option_d": "Biomassa",
+      "correct_option": "C",
+      "explanation": "Opção correta: C. A energia hidrelétrica é a fonte de energia renovável mais utilizada no mundo devido à sua alta eficiência e capacidade de geração em larga escala."
+    },
+    {
+      "id": 2,
+      "question": "Qual é a principal vantagem da energia solar?",
+      "option_a": "Baixo custo inicial",
+      "option_b": "Disponibilidade constante",
+      "option_c": "Emissão zero de poluentes",
+      "option_d": "Alta eficiência",
+      "correct_option": "C",
+      "explanation": "Opção correta: C. A principal vantagem da energia solar é a emissão zero de poluentes, tornando-a uma opção ambientalmente amigável."
+    },
+    {
+      "id": 3,
+      "question": "Qual país é o maior produtor de energia eólica?",
+      "option_a": "Estados Unidos",
+      "option_b": "China",
+      "option_c": "Alemanha",
+      "option_d": "Índia",
+      "correct_option": "B",
+      "explanation": "Opção correta: B. A China é o maior produtor de energia eólica do mundo, com uma capacidade instalada que supera a de qualquer outro país."
+    },
+    {
+      "id": 4,
+      "question": "Qual é a principal desvantagem da energia hidrelétrica?",
+      "option_a": "Alto custo de manutenção",
+      "option_b": "Impacto ambiental",
+      "option_c": "Baixa eficiência",
+      "option_d": "Disponibilidade limitada",
+      "correct_option": "B",
+      "explanation": "Opção correta: B. A principal desvantagem da energia hidrelétrica é o impacto ambiental, incluindo a alteração de ecossistemas aquáticos e terrestres."
+    },
+    {
+      "id": 5,
+      "question": "Qual o nome do tipo de energia sustentável que é gerado pelo vento?",
+      "option_a": "Energia Hidrelétrica",
+      "option_b": "Energia Eólica",
+      "option_c": "Energia Ventólica",
+      "option_d": "Energia Aérea",
+      "correct_option": "B",
+      "explanation": "A energia eólica é gerada pelo movimento das turbinas impulsionadas pelo vento."
+    },
+    {
+      "id": 6,
+      "question": "A energia geotérmica é extraída de qual fonte?",
+    "option_a": "Água dos oceanos",
+    "option_b": "Vento",
+    "option_c": "Calor da Terra",
+    "option_d": "Luz solar",
+    "correct_option": "C",
+    "explanation": "A energia geotérmica é extraída do calor interno da Terra."
+    },
+    {
+      "id": 7,
+      "question": "Qual é a principal desvantagem da energia solar?",
+      "option_a": "Alto custo inicial",
+      "option_b": "Indisponibilidade noturna",
+      "option_c": "Emissão de poluentes",
+      "option_d": "Baixa eficiência",
+      "correct_option": "B",
+      "explanation": "Opção correta: B. A principal desvantagem da energia solar é a disponibilidade intermitente, pois a geração de energia depende da luz solar, que não está disponível à noite ou em dias nublados."
+    },
+    {
+      "id": 8,
+      "question": "Qual é a principal vantagem da energia eólica?",
+      "option_a": "Baixo custo inicial",
+      "option_b": "Disponibilidade constante",
+      "option_c": "Emissão zero de poluentes",
+      "option_d": "Alta eficiência",
+      "correct_option": "C",
+      "explanation": "Opção correta: C. A principal vantagem da energia eólica é a emissão zero de poluentes, tornando-a uma opção limpa e sustentável."
+    },
+    {
+      "id": 9,
+      "question": "Qual é a principal desvantagem da energia de biomassa?",
+      "option_a": "Alto custo inicial",
+      "option_b": "Disponibilidade intermitente",
+      "option_c": "Emissão de poluentes",
+      "option_d": "Baixa eficiência",
+      "correct_option": "C",
+      "explanation": "Opção correta: C. A principal desvantagem da energia de biomassa é a emissão de poluentes, especialmente se a biomassa não for queimada de maneira eficiente."
+    },
+    {
+      "id": 10,
+      "question": "Qual é a principal vantagem da energia hidrelétrica?",
+      "option_a": "Baixo custo inicial",
+      "option_b": "Disponibilidade constante",
+      "option_c": "Emissão zero de poluentes",
+      "option_d": "Alta eficiência",
+      "correct_option": "B",
+      "explanation": "Opção correta: B. A principal vantagem da energia hidrelétrica é a disponibilidade constante, pois a água está sempre fluindo nos rios, permitindo a geração contínua de energia."
+    }
+  ]
